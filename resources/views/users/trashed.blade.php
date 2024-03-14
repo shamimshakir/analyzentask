@@ -5,11 +5,8 @@
                 <div class="p-6 text-gray-900">
 
                     <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-bold text-xl text-gray-600 pb-2">{{ __('User List') }}</h3>
-                        <div>
-                            <a href="{{ route('users.trashed') }}" type="button" class="text-white bg-yellow-400 hover:bg-yellow-500 font-semibold rounded text-sm px-2 py-1 text-center me-2 mb-2">{{__("Trashed Users")}}</a>
-                            <a href="{{ route('users.create') }}" type="button" class="text-white bg-green-600 hover:bg-green-800 font-semibold rounded text-sm px-2 py-1 text-center mb-2">{{__("Add User")}}</a>
-                        </div>
+                        <h3 class="font-bold text-xl text-gray-600 pb-2">{{ __('Deleted Users') }}</h3>
+                        <a href="{{ route('users.index') }}" type="button" class="text-white bg-blue-400 hover:bg-blue-500 font-semibold rounded text-sm px-2 py-1 text-center mb-2">{{__("Users")}}</a>
                     </div>
 
                     <table class="w-full rounded overflow-hidden">
@@ -34,11 +31,15 @@
                             </td>
                             <td class="p-2 text-sm">{{ $user->phone }}</td>
                             <td class="p-2 text-sm flex justify-end">
-                                <a href="{{ route('users.edit', $user->id) }}" class="text-white bg-blue-400 hover:bg-blue-600 font-semibold rounded text-sm px-2 py-1 text-center me-2">{{__('Edit')}}</a>
-                                <form action="{{ route('users.trash', $user->id) }}" method="post">
+                                <form action="{{ route('users.restore', $user->id) }}" method="post">
                                     @csrf
                                     @method('PUT')
-                                    <button type="submit" class="text-white bg-red-400 hover:bg-red-600 font-semibold rounded text-sm px-2 py-1 text-center">{{ __('Trash') }}</button>
+                                    <button type="submit" class="text-white bg-blue-400 hover:bg-blue-600 font-semibold rounded text-sm px-2 py-1 text-center mr-2">{{ __('Restore') }}</button>
+                                </form>
+                                <form action="{{ route('users.destroy', $user->id) }}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-white bg-red-400 hover:bg-red-600 font-semibold rounded text-sm px-2 py-1 text-center">{{ __('Delete') }}</button>
                                 </form>
                             </td>
                         </tr>

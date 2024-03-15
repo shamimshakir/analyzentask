@@ -8,7 +8,7 @@
                         <h3 class="font-bold text-xl text-gray-600 pb-2">{{ __('Deleted Users') }}</h3>
                         <a href="{{ route('users.index') }}" type="button" class="text-white bg-blue-400 hover:bg-blue-500 font-semibold rounded text-sm px-2 py-1 text-center mb-2">{{__("Users")}}</a>
                     </div>
-
+                    @if(count($users) > 0)
                     <table class="w-full rounded overflow-hidden">
                         <thead class="bg-gray-200">
                             <tr>
@@ -46,7 +46,7 @@
                         @endforeach
                         </tbody>
                     </table>
-
+                    @endif
                 </div>
             </div>
         </div>

@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules;
 
-class StoreUserRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,9 +26,8 @@ class StoreUserRequest extends FormRequest
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['string', 'max:255', 'nullable'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults(), 'min:8'],
             'phone' => ['string', 'digits_between:10,15'],
-            'photo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'photo' => ['image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ];
     }
 }

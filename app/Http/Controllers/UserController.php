@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class UserController extends Controller
 {
+    public function __construct(
+        
+    ){}
+
     /**
      * Display a listing of the users.
      */
@@ -37,15 +40,14 @@ class UserController extends Controller
     public function store(StoreUserRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-        $imageName = "";
 
         if($request->hasFile('photo')) {
             $imageName = time().'.'.$request->file('photo')->extension();
             $request->file('photo')->move(public_path('images'), $imageName);
+            $validated['photo'] = $imageName;
         }
 
         $validated['password'] = Hash::make($validated['password']);
-        $validated['photo'] = $imageName;
         User::query()->create($validated);
 
         return redirect()->route('users.create')->with('status', 'saved');
@@ -72,10 +74,21 @@ class UserController extends Controller
     /**
      * Update the specified user in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUserRequest $request, string $id): RedirectResponse
     {
-//        $product->update($request->validated());
-//        return redirect()->route('products.index');
+        $validated = $request->validated();
+        $user = User::query()->find($id);
+
+        if($request->hasFile('photo')) {
+            unlink(public_path('images/' . $user->photo));
+            $imageName = time().'.'.$request->file('photo')->extension();
+            $request->file('photo')->move(public_path('images'), $imageName);
+            $validated['photo'] = $imageName;
+        }
+
+        $user->update($validated);
+
+        return redirect()->route('users.edit', $user->id)->with('status', 'updated');
     }
 
     /**

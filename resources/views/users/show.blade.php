@@ -6,7 +6,7 @@
 
                     <div class="flex justify-between items-start mb-2">
                         <h3 class="font-bold text-xl text-gray-600 pb-2">{{ __('User Details') }}</h3>
-                        <a href="{{route('users.index')}}" type="button" class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl font-semibold rounded text-sm px-2 py-1 text-center me-2 mb-2">{{__("Users")}}</a>
+                        <a href="{{route('users.index')}}" type="button" class="text-white bg-blue-400 hover:bg-blue-500 font-semibold rounded text-sm px-2 py-1 text-center mb-2">{{__("Users")}}</a>
                     </div>
 
                     <div class="flex flex-col items-center bg-gray-100 rounded md:flex-row md:max-w-xl">

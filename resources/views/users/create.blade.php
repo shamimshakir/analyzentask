@@ -6,7 +6,7 @@
 
                     <div class="flex justify-between items-start mb-2">
                         <h3 class="font-bold text-xl text-gray-600 pb-2">{{ __('Create User') }}</h3>
-                        <a href="{{route('users.index')}}" type="button" class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl font-medium rounded text-sm px-2 py-1 text-center me-2 mb-2">{{__("Users")}}</a>
+                        <a href="{{route('users.index')}}" type="button" class="text-white bg-blue-400 hover:bg-blue-500 font-semibold rounded text-sm px-2 py-1 text-center mb-2">{{__("Users")}}</a>
                     </div>
 
                     <form method="POST" action="{{ route('users.store') }}" class="mt-4 space-y-4" enctype="multipart/form-data">
@@ -35,14 +35,14 @@
                         <div class="flex w-full">
                             <div class="w-full pr-2">
                                 <x-input-label for="password" :value="__('Password')" />
-                                <x-text-input id="password" name="password" type="password" class="mt-1 block w-full" autocomplete="password" />
+                                <x-text-input id="password" name="password" type="password" class="mt-1 block w-full" required autocomplete="password" />
                                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
                             </div>
 
                             <div class="w-full pl-2">
-                                <x-input-label for="confirm-password" :value="__('Confirm Password')" />
-                                <x-text-input id="confirm-password" name="confirm_password" type="password" class="mt-1 block w-full" autocomplete="password" />
-                                <x-input-error :messages="$errors->get('confirm_password')" class="mt-2" />
+                                <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+                                <x-text-input id="password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" required autocomplete="password" />
+                                <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                             </div>
                         </div>
                         <div class="flex w-full">

@@ -11,7 +11,7 @@
                             <a href="{{ route('users.create') }}" type="button" class="text-white bg-green-600 hover:bg-green-800 font-semibold rounded text-sm px-2 py-1 text-center mb-2">{{__("Add User")}}</a>
                         </div>
                     </div>
-
+                    @if(count($users) > 0)
                     <table class="w-full rounded overflow-hidden">
                         <thead class="bg-gray-200">
                             <tr>
@@ -45,7 +45,7 @@
                         @endforeach
                         </tbody>
                     </table>
-
+                    @endif
                 </div>
             </div>
         </div>

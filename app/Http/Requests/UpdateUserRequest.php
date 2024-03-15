@@ -28,6 +28,8 @@ class UpdateUserRequest extends FormRequest
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
             'phone' => ['string', 'digits_between:10,15'],
             'photo' => ['image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'addresses' => ['nullable', 'array'],
+            'addresses.*' => ['string'],
         ];
     }
 }

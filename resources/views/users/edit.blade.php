@@ -47,6 +47,21 @@
                             </div>
                         </div>
 
+                        <div x-data="{ inputs: {{ json_encode($user->addresses->pluck('address')) }} }">
+                            <div class="flex items-center justify-between">
+                                <x-input-label :value="__('Address')" />
+                                <button type="button" @click="inputs.push('')" class="text-white bg-gray-400 hover:bg-gray-500 rounded text-sm px-1 text-center mb-1 ml-2">✚ Add Field</button>
+                            </div>
+                            <template x-for="(address, index) in inputs" :key="index">
+                                <div class="relative">
+                                    <textarea x-model="inputs[index]" name="addresses[]" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer p-2 mb-2" cols="30" rows="3"></textarea>
+                                    <template x-if="index">
+                                        <button type="button" @click="inputs.splice(index, 1)" class="text-white bg-red-400 hover:bg-red-600 rounded text-sm px-1 text-center absolute top-0 right-0">✕</button>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+
                         <div class="flex items-center gap-4">
                             <x-primary-button>{{ __('Update') }}</x-primary-button>
 

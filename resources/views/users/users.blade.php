@@ -27,11 +27,9 @@
                         <tr class="border-t border-gray-200">
                             <td class="p-2 text-sm">{{ $key + 1 }}</td>
                             <td class="p-2 text-sm">
-                                <a href="{{ route('users.show', $user->id) }}">{{ $user->first_name . " " . $user->last_name }}</a>
+                                <a class="text-blue-600 underline" href="{{ route('users.show', $user->id) }}">{{ $user->first_name . " " . $user->last_name }}</a>
                             </td>
-                            <td class="p-2 text-sm">
-                                <a href="{{ route('users.show', $user->id) }}">{{ $user->email }}</a>
-                            </td>
+                            <td class="p-2 text-sm">{{ $user->email }}</td>
                             <td class="p-2 text-sm">{{ $user->phone }}</td>
                             <td class="p-2 text-sm flex justify-end">
                                 <a href="{{ route('users.edit', $user->id) }}" class="text-white bg-blue-400 hover:bg-blue-600 font-semibold rounded text-sm px-2 py-1 text-center me-2">{{__('Edit')}}</a>

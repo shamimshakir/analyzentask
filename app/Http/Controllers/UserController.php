@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\UserServiceInterface;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
@@ -12,7 +13,7 @@ use Illuminate\View\View;
 class UserController extends Controller
 {
     public function __construct(
-        
+        protected UserServiceInterface $service
     ){}
 
     /**
@@ -20,9 +21,7 @@ class UserController extends Controller
      */
     public function index(): View
     {
-        $users = User::query()
-            ->select('id','first_name', 'last_name', 'email', 'phone', 'photo')
-            ->get();
+        $users = $this->service->index();
         return view('users.users', compact('users'));
     }
 
@@ -39,17 +38,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request): RedirectResponse
     {
-        $validated = $request->validated();
-
-        if($request->hasFile('photo')) {
-            $imageName = time().'.'.$request->file('photo')->extension();
-            $request->file('photo')->move(public_path('images'), $imageName);
-            $validated['photo'] = $imageName;
-        }
-
-        $validated['password'] = Hash::make($validated['password']);
-        User::query()->create($validated);
-
+        $this->service->store($request->validated());
         return redirect()->route('users.create')->with('status', 'saved');
     }
 
@@ -58,7 +47,7 @@ class UserController extends Controller
      */
     public function show(string $id): View
     {
-        $user = User::query()->findOrFail($id);
+        $user = $this->service->singleUser($id);
         return view('users.show', compact('user'));
     }
 
@@ -67,7 +56,7 @@ class UserController extends Controller
      */
     public function edit(string $id): View
     {
-        $user = User::query()->find($id);
+        $user = $this->service->singleUser($id);
         return view('users.edit', compact('user'));
     }
 
@@ -76,19 +65,8 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, string $id): RedirectResponse
     {
-        $validated = $request->validated();
-        $user = User::query()->find($id);
-
-        if($request->hasFile('photo')) {
-            unlink(public_path('images/' . $user->photo));
-            $imageName = time().'.'.$request->file('photo')->extension();
-            $request->file('photo')->move(public_path('images'), $imageName);
-            $validated['photo'] = $imageName;
-        }
-
-        $user->update($validated);
-
-        return redirect()->route('users.edit', $user->id)->with('status', 'updated');
+        $this->service->update($request->validated(), $id);
+        return redirect()->route('users.edit', $id)->with('status', 'updated');
     }
 
     /**
@@ -96,8 +74,7 @@ class UserController extends Controller
      */
     public function trash(string $id): RedirectResponse
     {
-        $user = User::query()->find($id);
-        $user->delete();
+        $this->service->trash($id);
         return redirect()->route('users.index')->with('status', 'deleted');
     }
 
@@ -106,9 +83,7 @@ class UserController extends Controller
      */
     public function trashed(): View
     {
-        $users = User::onlyTrashed()
-            ->select('id','first_name', 'last_name', 'email', 'phone', 'photo')
-            ->get();
+        $users = $this->service->trashed();
         return view('users.trashed', compact('users'));
     }
 
@@ -117,8 +92,7 @@ class UserController extends Controller
      */
     public function restore(string $id): RedirectResponse
     {
-        $user = User::onlyTrashed()->find($id);
-        $user->restore();
+        $this->service->restore($id);
         return redirect()->route('users.index')->with('status', 'restored');
     }
 
@@ -127,8 +101,7 @@ class UserController extends Controller
      */
     public function destroy(string $id): RedirectResponse
     {
-        $user = User::onlyTrashed()->find($id);
-        $user->forceDelete();
+        $this->service->destroy($id);
         return redirect()->route('users.trashed')->with('status', 'deleted');
     }
 }

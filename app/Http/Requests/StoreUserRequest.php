@@ -29,6 +29,8 @@ class StoreUserRequest extends FormRequest
             'password' => ['required', 'confirmed', Rules\Password::defaults(), 'min:8'],
             'phone' => ['string', 'digits_between:10,15'],
             'photo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'addresses' => ['nullable', 'array'],
+            'addresses.*' => ['string'],
         ];
     }
 }

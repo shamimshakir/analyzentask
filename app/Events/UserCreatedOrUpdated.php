@@ -17,10 +17,10 @@ class UserCreatedOrUpdated
     /**
      * Create a new event instance.
      */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct(
+        public $user,
+        public $addresses
+    ) {}
 
     /**
      * Get the channels the event should broadcast on.

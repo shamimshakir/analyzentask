@@ -21,11 +21,11 @@ class UserAddressListener
      */
     public function handle(UserCreatedOrUpdated $event): void
     {
-//        $user = $event->user;
-//        $addressesData = $event->addressesData;
-//
-//        foreach ($addressesData as $addressData) {
-//            $user->addresses()->create($addressData);
-//        }
+        $user = $event->user;
+        $addresses = $event->addresses;
+
+        foreach ($addresses as $address) {
+            $user->addresses()->create($address);
+        }
     }
 }

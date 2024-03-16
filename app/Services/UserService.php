@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\UserServiceInterface;
+use App\Events\UserCreatedOrUpdated;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,6 +15,7 @@ class UserService Implements UserServiceInterface
     public function __construct(
         protected User $model
     ){}
+
     public function index(): array|Collection
     {
         return $this->model::query()
@@ -37,12 +39,9 @@ class UserService Implements UserServiceInterface
         $data['password'] = Hash::make($data['password']);
 
         $user = $this->model::query()->create($data);
-        $addresses = array_map(fn($address) => [
-            'address' => $address,
-            'user_id' => $user->id,
-        ], $data['addresses']);
+        $addresses = $this->processAddressData($user, $data['addresses']);
 
-        $user->addresses()->createMany($addresses);
+        event(new UserCreatedOrUpdated($user, $addresses));
 
         return $user;
     }
@@ -53,10 +52,7 @@ class UserService Implements UserServiceInterface
         $user = $this->find($id);
         $user->addresses()->forceDelete();
 
-        $addresses = array_map(fn($address) => [
-            'address' => $address,
-            'user_id' => $user->id,
-        ], $data['addresses']);
+        $addresses = $this->processAddressData($user, $data['addresses']);
 
         $user->addresses()->createMany($addresses);
 
@@ -97,5 +93,13 @@ class UserService Implements UserServiceInterface
             $data['photo'] = $imageName;
         }
         return $data;
+    }
+
+    public function processAddressData(Builder|Model $user, array $data): array
+    {
+        return array_map(fn($address) => [
+            'address' => $address,
+            'user_id' => $user->id,
+        ], $data);
     }
 }

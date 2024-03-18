@@ -39,9 +39,10 @@ class UserService Implements UserServiceInterface
         $data['password'] = Hash::make($data['password']);
 
         $user = $this->model::query()->create($data);
-        $addresses = $this->processAddressData($user, $data['addresses']);
-
-        event(new UserCreatedOrUpdated($user, $addresses));
+        if(array_key_exists('addresses', $data) && count($data['addresses']) > 0) {
+            $addresses = $this->processAddressData($user, $data['addresses']);
+            event(new UserCreatedOrUpdated($user, $addresses));
+        }
 
         return $user;
     }
@@ -52,9 +53,10 @@ class UserService Implements UserServiceInterface
         $user = $this->find($id);
         $user->addresses()->forceDelete();
 
-        $addresses = $this->processAddressData($user, $data['addresses']);
-
-        $user->addresses()->createMany($addresses);
+        if(array_key_exists('addresses', $data) && count($data['addresses']) > 0) {
+            $addresses = $this->processAddressData($user, $data['addresses']);
+            $user->addresses()->createMany($addresses);
+        }
 
         $user->update($data);
         return $user;
